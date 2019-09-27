@@ -1,0 +1,150 @@
+.biggest-detail-div{
+    width:100%;
+    float:none;
+    display: flex;
+    flex-direction: column;
+    margin:0px;
+    padding:0px;
+    box-sizing: border-box;
+}
+
+.my-row{
+    display: flex;
+    justify-content: space-between;
+}
+.my-back-div{
+    width:100%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 16px 0 16px 0;
+}
+
+#my-back-button-id{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#my-back-button-id .material-icons{
+    margin-right: 10px;
+}
+
+.my-shadowed-box{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.left-body-content{
+    position: relative;
+    /*flex: 0 0 66.666667%;
+    max-width: 66%;*/
+    justify-self: flex-start;
+}
+
+.left-body-content *{
+    line-height: 1.2em !important;
+}
+
+.right-body-content{
+    /*flex: 0 0 33.333333%;
+    max-width: 32%;*/
+    position: relative;
+    justify-self: flex-end;
+}
+
+.my-box-options{
+    display: flex;
+    justify-content: space-between;
+}
+
+.my-dropdown-button{
+    margin:0px;
+    padding:0px;
+    width:24px;
+    height:24px;
+}
+.hidden-manage-video-box{
+    display: flex;
+    flex-direction: column;
+    padding-top:15px;
+}
+#hidden-manage-video-id, #hidden-taxonomy-id, #hidden-local-annotation-id, #hidden-global-annotation-id, #hidden-punctual-annotations-id{
+    display: none;
+}
+.mini-hidden-manage-video-box{
+    display: flex;
+    flex-direction: row;
+    height:40px;
+}
+.my-fixed-bottom-size{
+    width:30px;
+    height:30px;
+}
+.my-detail-p-tag{
+    font-size: 12px;
+}
+.hidden-create-global-annotation-button-fields{
+    display: none;
+    flex-direction: column;
+
+}
+.hidden-create-global-annotation-button-fields-with-border{
+    display:flex;
+    flex-direction:column;
+}
+.hidden-message-box-alert-global-annotations{
+    display: none;
+}
+.my-small-input-global-anno{
+    height:30px;
+    width:100px;
+    text-align:center;
+}
+.my-singolar-global-annotation-div{
+    height:25px;
+}
+.global-annotations-actual-div{
+    display:inline-block;
+    width:auto;
+}
+.my-singolar-global-annotation-div{
+    width:auto;
+}
+.side-global-annotations-actual-div-option{
+    display:none;
+}
+.global-annotations-actual-div-tag{
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+.input-div-global-anno-create{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.my-global-anno-save-button{
+
+}
+.my-cancel-create-global-anno-button{
+    display:none;
+}
+.manage-video-box-list-anno{
+    display: flex;
+    flex-wrap: wrap;
+}
+.my-small-global-anno-modify-inser{
+    text-align:center;
+    height: 30px;
+    width: 100px;
+}
+.conteiner-input-global-annotation-modifier{
+    display:none;
+    flex-direction: column;
+}
+.hidden-manage-video-box-create-or-cancel-global{
+    display: flex;
+    justify-content: space-between;
+}
+
+

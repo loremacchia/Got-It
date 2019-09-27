@@ -1,0 +1,110 @@
+{% extends "users/base.html" %}
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock head%}
+
+{% block absoluteFunctionalityContent%}
+    <div class="hidden-delete-video" id="hidden-delete-video-id">
+        <div class="hidden-delete-video-content rounded">
+            <div class="border-bottom p-2 pl-3 mb-3 shadow-sm bg-danger rounded-top">
+                <span class="close">
+                    <button class="btn btn-outline-white btn-sm options-cancel-delete-button"><i class="material-icons">close</i></button>
+                </span>
+                <h2 class="white-h">Delete video</h2>
+            </div>
+            <div class="modal-body form-group">
+                <p>Do you really want to delete this video?</p>
+                <button type="button" class="btn btn-danger options-confirm-delete-button" data-taker="0" >Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="hidden-add-video" id="hidden-add-video-id">
+        <div class="hidden-add-video-content hidden-add-video-section rounded">
+            <form method="POST" id="my-upload-form-id" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="border-bottom p-2 pl-3 pr-3 mb-3 shadow-sm bg-primary rounded-top d-flex justify-content-between align-items-center ">
+                    <h2 class="white-h">Add video</h2>
+                    <span class="close">
+                        <button class="btn btn-outline-white btn-sm options-cancel-add-video-button"><i class="material-icons">close</i></button>
+                    </span>
+                </div>
+                <div class="modal-body form-group">
+                    {{ form|crispy }}
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary save-upload-button">Save</button>
+                    </div>
+                    <div class="hidden-upload-loader">
+                        <div class="spinner-border text-primary mr-2"></div>
+                        <div><b>Uploading and converting video</b></div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock absoluteFunctionalityContent%}
+
+{% block content %}
+    <main role="main" class="container">
+
+        <div class="row">
+            <div class="hidden-upload-video-spinner">
+                <div class="spinner-border text-primary mr-2"></div>
+                <div><b>Your video is being converted</b></div>
+            </div>
+            <div class="bigger-centered-div">
+                <div class="content-section">
+                    <div class="p-2 pl-3 mb-3 bg-dark rounded text-white">
+                        Videos
+                    </div>
+                    <div class="file-page-conteiner">
+                        <div class="file-page-box">
+                            <div class="file-page-video border border-secondary bg-white rounded">
+                                <button class="btn btn-link videoAddButton">
+                                    <i class="material-icons md-48"> add_circle_outline </i>
+                                </button>
+                            </div>
+                            <div class="file-page-textAndOptions"></div>
+                        </div>
+
+                        {% for video in videos %}
+                            <div class="file-page-box" id="{{ video.id }}">
+                                <div class="file-page-video border border-secondary bg-white rounded">
+                                    <a class="file-page-video-playButton" href="{% url 'VideoDetailView' video.id %}">
+                                        <i class="material-icons md-48">play_circle_outline</i>
+                                    </a>
+
+                                    <video class="file-page-video-videoPlayer" preload="auto">
+                                        <source src="{{ MEDIA_URL }}{{video.videoFile}}" type="video/webm">
+                                        <source src="{{ MEDIA_URL }}{{video.videoFile1}}" type="video/mp4">
+                                        Video uploaded by {{video.userUploader}} named: {{video.name}}
+                                    </video>
+
+                                </div>
+                                <div class="file-page-textAndOptions">
+                                    <b class="nome-video">{{ video.name }}</b>
+                                    <div class="options-tooltip mr-1">
+                                        <button class="btn btn-outline-dark btn-sm options-tooltip-button deleteVideo" data-taker="{{ video.id }}"  data-uploader-user-id="{{ video.userUploader.id }}"><i class="material-icons my-flex-icon">clear</i></button>
+                                        <button class="btn btn-outline-dark btn-sm options-tooltip-button lockUnlock" data-taker="{{ video.id }}" data-user-id="{{ user.id }}" data-uploader-video-id="{{ video.userUploader.id }}" data-is-global="{{video.isGlobal}}"><i class="material-icons">lock</i></button>
+                                        <button class="btn btn-outline-dark btn-sm options-tooltip-button downloadJson" data-taker="{{ video.id }}"><i class="material-icons">save_alt</i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="logged-user-id" data-logged-user="{{ user.id }}"></div>
+    <a id="downloadAnchorElem" style="display:none"></a>
+
+{% endblock content%}
+
+{% block scriptContent %}
+    <script type="text/javascript" src="{% static 'fileManager/js/main.js' %}"></script>
+{% endblock scriptContent%}

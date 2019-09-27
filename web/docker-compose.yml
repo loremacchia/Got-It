@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - '3306:3306'
+    volumes:
+      - .:/media/uploads
+    environment:
+       MYSQL_DATABASE: 'annotatormysql'
+       MYSQL_USER: 'root'
+       MYSQL_PASSWORD: 'password'
+       MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+  web:
+    build: .
+    volumes:
+      - .:/leonardoAnnotator
+      - .:/fileManager/static
+      - .:/homePage/static
+      - .:/user/static
+      - .:/media/uploads
+
+
+    command: python manage.py runserver --insecure 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

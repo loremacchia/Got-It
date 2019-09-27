@@ -1,0 +1,282 @@
+{% extends "users/base.html" %}
+{% load static from staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'fileManager/css/detail.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'fileManager/css/video-player-style.css' %}">
+    <link rel="stylesheet" href="{% static 'fileManager/css/farbtastic.css' %}" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />  
+    <script src="https://kit.fontawesome.com/a35f3f7742.js"></script>
+{% endblock head%}
+
+{% block content %}
+    <div  class="biggest-detail-div">
+        <div class="my-row">
+            <div class="my-back-div ">
+                <button type="button" class="btn btn-dark btn-sm" id="my-back-button-id"><i class="material-icons my-flex-icon">arrow_back</i>Back</button>
+            </div>
+        </div>
+        <div class="my-row">
+            <div class="left-body-content">
+                <div class="p-3 video-player-full my-shadowed-box rounded bg-white">
+                    <div class="video-title p-2 bg-dark rounded text-white ">
+                        Video: {{object.name}}
+                    </div>
+                    <div id="video-player-container">
+                        <video class="video-player" data-taker="{{object.id}}">
+                            <source src="{{ MEDIA_URL }}{{video.videoFile1}}" type="video/mp4">
+                            <source src="{{ MEDIA_URL }}{{object.videoFile}} " type="video/webm">
+                            Video uploaded by {{video.userUploader }} named: {{video.name}}
+                        </video>
+                        <div id="contextual-buttons-container"></div>
+                    </div>
+                    <div class="video-bar">
+                        <button class="fas fa-play fa-lg play-button button white-color btn btn-outline-light"></button>
+                        <button class="fas fa-pause fa-lg pause-button button white-color btn btn-outline-light"></button>
+                        <div id="frames-time">
+                            <div class="time">
+                                <span class="time-elapsed"> 0:00 </span>/
+                                <span class="time-total"> 0:00 </span>
+                            </div>
+                            <div class="frame-manage">
+                                <div class="frames">0</div>
+                                <div class="skip-buttons-container">
+                                    <button class="fas fa-angle-double-left my-shadowed-box skip-button btn btn-sm btn-light" id="left-frame"></button>
+                                    <button class="fas fa-angle-double-right my-shadowed-box skip-button btn btn-sm btn-light" id="right-frame"></button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-video rounded">
+                                <div class="progress-bar-video rounded select-progress">
+                                    <div class="cursor-container top-container">
+                                        <i class="fas fa-caret-down cursor top-cursor fa-lg grey-color"  id="first-top-cursor"></i>
+                                        <i class="fas fa-caret-down cursor top-cursor fa-lg grey-color" id="second-top-cursor"></i>
+                                    </div>
+                                </div>
+                                <div class="cursor-container bottom-container">
+                                    <i class="fas fa-caret-up cursor bottom-cursor fa-lg"></i>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <button class="fas fa-pencil-alt fa-lg font-awes-button button shadow-apply rounded btn btn-light"></button>
+                        <button class="far fa-circle fa-lg font-awes-button button shadow-apply rounded btn btn-light" id="circle-icon"></button>
+                    </div>
+                </div>
+                <button class="far fa-square fa-lg active-mode-rectangle font-awes-button button shadow-apply bg-white rounded border border-warning btn btn-outline-warning" id="active-mode-rectangle-id"></button>
+                <button class="fas fa-times fa-lg exit-active-mode-rectangle font-awes-button button shadow-apply rounded border border-danger btn btn-outline-danger" id ="exit-active-mode-rectangle-id"></button>
+                <div class="active-mode-bar">
+                <span class="annotation-tag shadow rounded bg-white text-nowrap" contenteditable="true">Tag</span>
+                <div class="active-mode-time active-mode-start">
+                    <button type="button" id="start-chevron-left" class="active-mode-chevron btn btn-sm btn-light border">
+                        <span class="fas fa-chevron-left fa-sm"></span> 
+                    </button>
+                    <div class="time-container rounded  border bg-white">
+                        Start:
+                        <div class="start-time" contenteditable="true"></div>
+                    </div>
+                    <button type="button" id="start-chevron-right" class="active-mode-chevron  btn btn-sm btn-light border">
+                        <span class="fas fa-chevron-right fa-sm"></span> 
+                    </button>
+                </div>
+                <div class="active-mode-time active-mode-end">
+                    <button type="button" id="end-chevron-left" class="active-mode-chevron btn btn-sm btn-light border">
+                        <span class="fas fa-chevron-left fa-sm"></span> 
+                    </button>
+                    <div class="time-container rounded  border bg-white">
+                        End:
+                        <div class="end-time" contenteditable="true"></div>
+                    </div>
+                    <button type="button" id="end-chevron-right" class="active-mode-chevron btn btn-sm btn-light border">
+                        <span class="fas fa-chevron-right fa-sm"></span> 
+                    </button>
+                </div>
+            </div>
+                
+          </div>
+          <div class="right-body-content" >
+              <div class="p-3 mb-3 my-shadowed-box rounded">
+                  <div class="p-2 bg-dark rounded text-white my-box-options d-flex align-items-center">
+                      <p class="mb-0">Manage Video</p>
+                      <button class="btn btn-dark btn-sm my-dropdown-button dropdown-botton-manage-video"><i class="material-icons">arrow_drop_down</i></button>
+                  </div>
+                  <div class="hidden-manage-video-box" id="hidden-manage-video-id">
+                      <div class="mini-hidden-manage-video-box mini-lock d-flex align-items-center"><button class="btn btn-light btn-sm" id="lockunlock-video-detail" data-is-global="{{ object.isGlobal }}"><i class="material-icons my-flex-icon">lock</i></button><p class="mb-0 my-detail-p-tag">Lock video(annotations only by me)</p></div>
+                      <div class="mini-hidden-manage-video-box mini-download d-flex align-items-center"><button class="btn btn-light btn-sm" id="download-annotation-video-detail"><i class="material-icons my-flex-icon">save_alt</i></button><p class="mb-0 my-detail-p-tag">Download annotations(JSON)</p></div>
+                      <div class="mini-hidden-manage-video-box mini-delete d-flex align-items-center"><button class="btn btn-light btn-sm" id="delete-video-detail"><i class="material-icons my-flex-icon">clear</i></button><p class="mb-0 my-detail-p-tag">Delete video</p></div>
+                  </div>
+              </div>
+              <div class="p-3 mb-3 my-shadowed-box rounded">
+                  <div class="p-2 bg-dark rounded text-white my-box-options d-flex align-items-center">
+                      <p class="mb-0">Local Annotation</p>
+                      <button class="btn btn-dark btn-sm my-dropdown-button dropdown-botton-local-annotations"><i class="material-icons">arrow_drop_down</i></button>
+                  </div>
+                  <div class="hidden-manage-video-box" id="hidden-local-annotation-id">
+                        <div class="mini-hidden-manage-video-box mini-lock d-flex align-items-center mb-2"><button class="btn btn-light btn-sm" id="check-local-annotations"><i class="material-icons my-flex-icon">check</i></button><p class="mb-0 my-detail-p-tag">Show only my annotations</p></div>
+                        <div class="mini-hidden-manage-video-box mini-download">
+                            <p class="mb-0 my-detail-p-tag"><b>Active annotations: </b></p>
+                            <p class="pl-2 mb-0 my-detail-p-tag" id="local-anno-text"></p>
+                        </div>
+                        <div class="mini-hidden-manage-video-box mini-delete">
+                            <p class="mb-0 my-detail-p-tag"><b>Added by:</b></p>
+                            <p class="pl-2 mb-0 my-detail-p-tag" id="local-anno-user"></p>
+                            <p class="pl-2 mb-0 my-detail-p-tag"><b>on</b></p>
+                            <p class="pl-2 mb-0 my-detail-p-tag" id="local-anno-date"></p>
+                            <p class="pl-2 mb-0 my-detail-p-tag"><b>at</b></p>
+                            <p class="pl-2 mb-0 my-detail-p-tag" id="local-anno-time"></p>
+                        </div>
+                  </div>
+              </div>
+              <div class="p-3 mb-3 my-shadowed-box rounded">
+                  <div class="p-2 bg-dark rounded text-white my-box-options d-flex align-items-center">
+                      <p class="mb-0">Global Annotation</p>
+                      <button class="btn btn-dark btn-sm my-dropdown-button dropdown-botton-global-annotations"><i class="material-icons">arrow_drop_down</i></button>
+                  </div>
+                  <div class="hidden-manage-video-box" id="hidden-global-annotation-id">
+                      <div class="mb-2 hidden-manage-video-box-create-or-cancel-global">
+                          <button class="btn btn-outline-primary" id="show-create-global-annotation-button">Create global annotation</button>
+                          <div class="my-cancel-create-global-anno-button"><button class="fas fa-times rounded border border-primary btn btn-outline-primary" ></button></div>
+                      </div>
+                      <div class="hidden-message-box-alert-global-annotations">
+                          <div class="alert alert-danger">
+                              <strong>Danger!</strong> Can't add annotation on a locked video
+                          </div>
+                      </div>
+                      <div  class="hidden-create-global-annotation-button-fields" id="hidden-create-global-annotation-button-fields-id">
+                          <div class="rounded border border-secondary hidden-create-global-annotation-button-fields-with-border mb-2">
+                              <div class="input-div-global-anno-create m-1 pr-4">
+                                  <p>Tag: </p>
+                                  <input class="rounded m-1 my-small-input-global-anno mr-2" type="text" id="globa_anno_tag_id" value="Tag">
+                              </div>
+                              <div class="input-div-global-anno-create m-1">
+                                  <p>First frame: </p>
+                                  <div>
+                                      <button class="btn btn-sm btn-light border " id="left-button-global-anno-frame-id"><span class="fas fa-chevron-left fa-sm" aria-hidden="true"></span></button>
+                                      <input type="text" class="rounded m-1 my-small-input-global-anno" id="globa_anno_first_time_id" value=0>
+                                      <button class="btn btn-sm btn-light border" id="right-button-global-anno-frame-id"><span class="fas fa-chevron-right fa-sm" aria-hidden="true"></span></button>
+                                  </div>
+
+                              </div>
+                              <div class="input-div-global-anno-create m-1">
+                                  <p>Second frame: </p>
+                                  <div>
+                                      <button class="btn btn-sm btn-light border" id="second-left-button-global-anno-frame-id"><span class="fas fa-chevron-left fa-sm" aria-hidden="true"></span></button>
+                                      <input type="text" class="rounded m-1 my-small-input-global-anno" id="globa_anno_second_time_id" value=0>
+                                      <button class="btn btn-sm btn-light border" id="second-right-button-global-anno-frame-id"><span class="fas fa-chevron-right fa-sm" aria-hidden="true"></span></button>
+                                  </div>
+                              </div>
+                          </div>
+                              <button id="submit_global_annotation" class="btn btn-outline-primary my-global-anno-save-button mb-3" value="{{ object.id }}">Save</button>
+                      </div>
+                      <div class="mini-hidden-manage-video-box mini-lock d-flex align-items-center mb-2"><button class="btn btn-light btn-sm" id="show-only-my-global-anno-button-id"><i class="material-icons my-flex-icon">check</i></button><p class="mb-0 my-detail-p-tag">Show only my annotations</p></div>
+                      <div class=manage-video-box-list-anno" id="manage-video-box-list-anno-id" data-user="{{ user.id }}">
+                          {% for globalanno in globalAnnotationsList %}
+                                <div class="global-annotations-actual-div" data-global-user-id="{{ globalanno.user.id }}" globalid="{{ globalanno.id }}" >
+                                    <div class="border border-secondary m-2 pl-2 pr-2 rounded global-annotations-actual-div-tag" modifyTagId="{{ globalanno.id }}">
+                                        {{ globalanno.tag }}
+                                    </div>
+
+                                    <div class="side-global-annotations-actual-div-option">
+                                        <button class="fas fa-times rounded border border-primary btn btn-outline-primary my-delete-global-annotation-button" data-global="{{ globalanno.id }}" aria-hidden="true"></button>
+                                        <button class="fa fa-pencil-square-o border border-primary btn btn-outline-primary ml-2 mr-2 my-modify-global-annotation-button" data-global="{{ globalanno.id }}" aria-hidden="true"></button>
+                                    </div>
+                                </div>
+                                <div class="conteiner-input-global-annotation-modifier rounded border border-secondary " modifyId="{{ globalanno.id }}">
+                                    <div class="input-div-global-anno-create m-1 mt-2 pr-4">
+                                        <p>Tag: </p>
+                                        <input class="rounded my-small-global-anno-modify-inser input-global-anno-modify-tag mr-2" type="text" value="{{ globalanno.tag }}">
+                                    </div>
+                                    <div class="input-div-global-anno-create m-1">
+                                        <p>First frame: </p>
+                                        <div>
+                                            <button class="btn btn-sm btn-light border first-left-button-modify-global-anno" modify-identifier-first="{{ globalanno.id }}"><span class="fas fa-chevron-left fa-sm" aria-hidden="true"></span></button>
+                                            <input class="rounded my-small-global-anno-modify-inser input-global-anno-modify-first" modify-identifier-first-input="{{ globalanno.id }}" type="text" value="{{ globalanno.firstTime }}">
+                                            <button class="btn btn-sm btn-light border first-right-button-modify-global-anno" modify-identifier-first="{{ globalanno.id }}"><span class="fas fa-chevron-right fa-sm" aria-hidden="true"></span></button>
+                                        </div>
+                                    </div>
+                                    <div class="input-div-global-anno-create m-1">
+                                        <p>Second frame: </p>
+                                        <div>
+                                            <button class="btn btn-sm btn-light border second-left-button-modify-global-anno" modify-identifier-second="{{ globalanno.id }}"><span class="fas fa-chevron-left fa-sm" aria-hidden="true"></span></button>
+                                            <input class="rounded my-small-global-anno-modify-inser input-global-anno-modify-second" modify-identifier-second-input="{{ globalanno.id }}" type="text" value="{{ globalanno.secondTime }}">
+                                            <button class="btn btn-sm btn-light border second-right-button-modify-global-anno" modify-identifier-second="{{ globalanno.id }}"><span class="fas fa-chevron-right fa-sm" aria-hidden="true"></span></button>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-primary m-2 mb-3 modify-global-annotation-button-confirm" confirModifyId="{{ globalanno.id }}">Modify</button>
+                                </div>
+                          {% endfor%}
+                      </div>
+
+                  </div>
+              </div>
+              <div class="p-3 mb-3 my-shadowed-box rounded">
+                  <div class="p-2 bg-dark rounded text-white my-box-options d-flex align-items-center">
+                      <p class="mb-0">Taxonomy</p>
+                      <button class="btn btn-dark btn-sm my-dropdown-button dropdown-botton-taxonomy"><i class="material-icons">arrow_drop_down</i></button>
+                  </div>
+                  <div class="hidden-manage-video-box" id="hidden-taxonomy-id">
+                        <div id="taxonomy-buttons">
+                            <button id="tax-element-create" class="btn btn-outline-secondary">
+                                <span>Create</span>
+                            </button>
+                            <button id="tax-element-rename" class="btn btn-outline-secondary">
+                                <span>Rename</span>           
+                            </button>
+                            <button id="tax-element-delete" class="btn btn-outline-secondary">
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                        <div id="taxonomy-box">
+                                <input id="search-taxonomy-id" class="form-control form-control-sm search-taxonomy mb-2" type="text" placeholder="Search an element"/>
+                            <div id="taxonomy"></div>
+                        </div>
+                  </div>
+              </div>
+              <div class="p-3 mb-3 my-shadowed-box rounded">
+                    <div class="p-2 bg-dark rounded text-white my-box-options d-flex align-items-center">
+                        <p class="mb-0">Punctual Annotations / Counter</p>
+                        <button class="btn btn-dark btn-sm my-dropdown-button dropdown-botton-punctual-annotations"><i class="material-icons">arrow_drop_down</i></button>
+                    </div>
+                    <div class="hidden-manage-video-box " id="hidden-punctual-annotations-id">
+                        <div action="" class="picker-form mb-3">
+
+                        </div>
+                        <div id="punctual-anno-container">
+
+                        </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    <footer class="footer-video-editor">
+        <div class="author-container">
+            <span>Authors:</span>
+            <span>Macchiarini Lorenzo</span>
+            <span>Mandelli Lorenzo</span>
+            <span>Cresti Lisa</span>
+        </div>
+    </footer>
+
+    <a id="downloadAnchorElem" style="display:none"></a>
+    <div type="hidden" id="userId" value="{{user.username}}"></div>
+    <div id="logged-user-id" data-user="{{ user.id }}"></div>
+    <div id="video-user-id" data-user="{{ object.userUploader.id }}"></div>
+    <div id="video-id" data-videoid="{{ object.id }}"></div>
+    <div id="video-is-global" data-global="{{ object.isGlobal }}"></div>
+{% endblock content%}
+
+{% block scriptContent %}
+    <script src="//cdn.jsdelivr.net/velocity/1.2.1/velocity.min.js"></script>
+    <script src="//cdn.jsdelivr.net/velocity/1.2.1/velocity.ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript" src="{% static 'fileManager/js/video-player-scripts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fileManager/js/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fileManager/js/detail.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fileManager/js/farbtastic.j' %}s"></script>
+{% endblock scriptContent%}
